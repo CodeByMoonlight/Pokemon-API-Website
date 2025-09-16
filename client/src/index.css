@@ -1,4 +1,10 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Cinzel:wght@400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Cinzel:wght@400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* * {
+  color: #313131;
+} */
 
 @theme {
   /* Normal */
@@ -131,6 +137,7 @@
   --color-pokeball-red: #fb3b38;
   --color-pokeball-dark-red: #960503;
   --color-pokeball-blue: #0c2f79;
+  --color-pokeball-dark-blue: #0a2866;
 
   /* text */
   --color-text-primary: #313131;
@@ -252,20 +259,135 @@ button:focus-visible {
 }
 
 .main-btn:hover {
-  border-color: #960503;
+  background-color: var(--color-pokeball-dark-red);
 }
 
 .header {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 58px;
+  font-family: "Afacad", sans-serif;
+  font-optical-sizing: auto;
   font-weight: 600;
+  font-style: normal;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  width: 70%;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.625;
+  color: var(--color-text-primary);
 }
 
 .nav-item {
-  font-size: 1.2em;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   color: #313131;
+  font-family: "Roboto", sans-serif;
+  width: fit-content;
+  padding: 8px 16px;
+  border-radius: 4px;
+  letter-spacing: 2px;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
 }
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: var(--color-pokeball-blue);
+}
+
+.nav-item-btn {
+  font-size: 16px;
+  font-weight: 400;
+  color: #313131;
+  font-family: "Roboto", sans-serif;
+  width: fit-content;
+  padding: 8px;
+  border-radius: 100px;
+  letter-spacing: 2px;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+}
+
+.nav-item-btn:hover {
+  background-color: var(--color-pokeball-blue);
+  color: #ffffff;
+
+  .icon{
+    color: #ffffff;
+  }
+}
+
+.icon{
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-primary)
+}
+
+.active {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-pokeball-blue);
+}
+
+@keyframes fadeOutBackground {
+  0% {
+    background: var(--color-text-primary);
+    opacity: 1;
+  }
+  100% {
+    background: transparent;
+    opacity: 0;
+  }
+}
+
+@keyframes suck {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  25% {
+    transform: scale(0.75);
+    opacity: 0.75;
+  }
+
+  50% {
+    transform: scale(0.5);
+    opacity: 0.5;
+  }
+
+  75% {
+    transform: scale(0.25);
+    opacity: 0.25;
+  }
+
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.loading {
+  background: var(--color-text-primary);
+  transition: all 0.3s ease;
+}
+
+.loading.fade-out {
+  animation: fadeOutBackground 1s ease-out forwards;
+}
+
+.loading-icon {
+  animation: suck 0.2s ease-in forwards;
+  animation-delay: 8s;
+}
+
 
 /* @media (prefers-color-scheme: light) {
   :root {
