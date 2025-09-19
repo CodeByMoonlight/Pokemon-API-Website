@@ -12,9 +12,11 @@ export default function Navbar() {
   const [currentId, setCurrentID] = useState("header");
 
   useEffect(() => {
-    if (location.pathname === "/") setCurrentID("header");
-    else if (location.pathname === "/pokedex") setCurrentID("pokedex");
-    else if (location.pathname === "/memory-game") setCurrentID("game");
+    const path = location.pathname;
+    if (path === "/") setCurrentID("header");
+    else if (path.startsWith("/pokedex")) setCurrentID("pokedex");
+    else if (path === "/memory-game") setCurrentID("game");
+    console.log(path);
   }, [location.pathname]);
 
   const [showNavbar, setShowNavbar] = useState(true);
@@ -57,7 +59,7 @@ export default function Navbar() {
           HOME
         </Link>
         <Link
-          to="/pokedex"
+          to="/pokedex/page/1"
           className={`nav-item ${currentId === "pokedex" ? "active" : ""}`}
         >
           <BiBookOpen className="h-[20px] w-[20px]" />

@@ -4,31 +4,18 @@ const app = express();
 const cors = require("cors");
 const path = require("path");
 const corsOptions = {
-  origin: ["http://localhost:5173"], // Adjust the port if necessary
-  // optionsSuccessStatus: 200,
+  origin: ["http://localhost:5173"], 
+  
 };
 
 app.use(cors(corsOptions));
 
-// app.use(express.static(path.join(__dirname, "public")));
-// app.use(express.json());
 
-const port = 8080; //Or 8000
-
-// const db = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "password",
-//   database: "pokemon_db",
-// });
-
-// app.get("/api", (req, res) => {
-//   res.json({ fruits: ["apple", "banana", "orange"] });
-// });
+const port = 8080; 
 
 app.get("/", async (req, res) => {
   try {
-    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=8");
     const data = await response.json();
     res.json(data);
   } catch (error) {
@@ -38,7 +25,7 @@ app.get("/", async (req, res) => {
 
 app.get("/memory-game", async (req, res) => {
   try {
-    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=5");
     const data = await response.json();
     res.json(data);
   } catch (error) {
@@ -48,52 +35,71 @@ app.get("/memory-game", async (req, res) => {
 
 app.get("/pokedex", async (req, res) => {
   try {
-    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+    
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
     const data = await response.json();
-    res.json(data);
+    
+    // Add pagination info
+    const totalCount = data.count;
+    const totalPages = Math.ceil(totalCount / limit);
+    
+    res.json({
+      ...data,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalCount: totalCount,
+        limit: limit,
+        hasNext: data.next !== null,
+        hasPrevious: data.previous !== null
+      }
+    });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch Pokemon data" });
   }
 });
 
+app.get("/search", async (req, res) => {
+  try {
+    const query = req.query.query?.toLowerCase().trim();
+    
+    if (!query) {
+      return res.json([]);
+    }
+
+    // Fetch all Pokemon to search through them
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=2000");
+    const data = await response.json();
+    
+    // Filter Pokemon by name
+    const filteredPokemon = data.results.filter(pokemon =>
+      pokemon.name.toLowerCase().includes(query)
+    );
+    
+    res.json(filteredPokemon);
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ error: "Failed to search Pokemon" });
+  }
+});
+
 app.get("/:id", async (req, res) => {
   try {
-    // Fetch Pokemon details
+
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
     );
     const data = await response.json();
     res.json(data);
 
-    // Fetch species data
-    // const speciesResponse = await fetch(details.species.url);
-    // const speciesData = await speciesResponse.json();
-
-    // res.json({
-    //   ...details,
-    //   species: {
-    //     ...details.species,
-    //     url: speciesData.url,
-    //   },
-    // });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Failed to fetch Pokemon data" });
   }
 });
-
-// You can also get a specific Pokemon by ID
-// app.get("/api/pokemon/:id", async (req, res) => {
-//   try {
-//     const response = await fetch(
-//       `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
-//     );
-//     const data = await response.json();
-//     res.json(data);
-//   } catch (error) {
-//     res.status(500).json({ error: "Failed to fetch Pokemon data" });
-//   }
-// });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -8,20 +8,6 @@ export default function AudioPlayer() {
   useEffect(() => {
     const audio = audioRef.current;
 
-    const tryToPlay = async () => {
-      try {
-        if (audio) {
-          await audio.play();
-          setIsPlaying(true);
-        }
-      } catch (error) {
-        console.log("Autoplay prevented. User interaction required.");
-        setIsPlaying(false);
-      }
-    };
-
-    tryToPlay();
-
     return () => {
       if (audio) {
         audio.pause();

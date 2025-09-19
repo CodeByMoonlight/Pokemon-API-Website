@@ -67,7 +67,7 @@ export default function Footer() {
       </div>
       <div className="w-1/3 text-right">
         <p className="text-text-primary font-semibold">
-          2025 All Rights Reserved
+          © 2025 All Rights Reserved
         </p>
       </div>
     </nav>
