@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
-import PokemonView from "./PokemonView.js";
+import PokemonView from "./PokemonView.jsx";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -10,19 +10,46 @@ import {
 } from "react-router-dom";
 import MemoryGame from "./MemoryGame.jsx";
 import Pokedex from "./Pokedex.jsx";
+import { NavigationProvider } from "./contexts/NavigationContext.jsx";
+import ProgressBar from "./components/ProgressBar.jsx";
+import { useNavigation } from "./contexts/NavigationContext.jsx";
+
+// Wrapper component to show progress bar
+const AppWithProgressBar = ({ children }) => {
+  const { isLoading, progress } = useNavigation();
+
+  return (
+    <>
+      <ProgressBar progress={progress} isVisible={isLoading} />
+      {children}
+    </>
+  );
+};
 
 const route = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <AppWithProgressBar>
+        <App />
+      </AppWithProgressBar>
+    ),
   },
   {
     path: "/view/:pokemonId",
-    element: <PokemonView />,
+    element: (
+      <AppWithProgressBar>
+        <PokemonView />
+      </AppWithProgressBar>
+    ),
   },
   {
     path: "/memory-game",
-    element: <MemoryGame />,
+    element: (
+      <AppWithProgressBar>
+        <MemoryGame />
+      </AppWithProgressBar>
+    ),
   },
   {
     path: "/pokedex",
@@ -30,12 +57,18 @@ const route = createBrowserRouter([
   },
   {
     path: "/pokedex/page/:pageNumber",
-    element: <Pokedex />,
+    element: (
+      <AppWithProgressBar>
+        <Pokedex />
+      </AppWithProgressBar>
+    ),
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={route} />
+    <NavigationProvider>
+      <RouterProvider router={route} />
+    </NavigationProvider>
   </StrictMode>,
 );

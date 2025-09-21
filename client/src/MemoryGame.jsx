@@ -3,14 +3,19 @@ import "./App.css";
 import axios from "axios";
 import PokemonCard from "./components/PokemonCard.jsx";
 import Navbar from "./components/navbar.jsx";
-import Loading from "./components/Loading.jsx";
 import AudioPlayer from "./components/AudioPlayer.jsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ConfettiSideCannons } from "./components/ui/confetti.jsx";
 
 export default function MemoryGame() {
   const [pokemonCards, setPokemonCards] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showLoading, setShowLoading] = useState(true);
   const [flippedCards, setFlippedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
   const [score, setScore] = useState(0);
@@ -26,52 +31,47 @@ export default function MemoryGame() {
     return shuffled;
   };
 
+  const fetchPokemon = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/memory-game");
+      const data = await response.data;
+
+      const cards = [];
+
+      await Promise.all(
+        data.results.map(async (poke) => {
+          const details = (await axios.get(poke.url)).data;
+          const speciesData = (await axios.get(details.species.url)).data;
+
+          const pokemonData = {
+            id: details.id,
+            en_name: details.name,
+            jp_name:
+              speciesData.names.find((name) => name.language.name === "ja-Hrkt")
+                ?.name || details.name,
+            sprite: details.sprites.other["official-artwork"].front_default,
+            types: details.types.map((t) => t.type.name),
+            habitat: speciesData.habitat?.name || "unknown",
+            generation: speciesData.generation?.name || "unknown",
+          };
+
+          cards.push({ ...pokemonData, cardId: `${details.id}-1` });
+          cards.push({ ...pokemonData, cardId: `${details.id}-2` });
+        }),
+      );
+
+      const shuffledCards = shuffleArray(cards);
+      setPokemonCards(shuffledCards);
+    } catch (err) {
+      setError("Failed to fetch Pokemon");
+    }
+  };
+
   useEffect(() => {
-    const fetchPokemon = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/memory-game");
-        const data = await response.data;
-
-        const cards = [];
-
-        await Promise.all(
-          data.results.map(async (poke) => {
-            const details = (await axios.get(poke.url)).data;
-            const speciesData = (await axios.get(details.species.url)).data;
-
-            const pokemonData = {
-              id: details.id,
-              en_name: details.name,
-              jp_name:
-                speciesData.names.find(
-                  (name) => name.language.name === "ja-Hrkt",
-                )?.name || details.name,
-              sprite: details.sprites.other["official-artwork"].front_default,
-              types: details.types.map((t) => t.type.name),
-              habitat: speciesData.habitat?.name || "unknown",
-              generation: speciesData.generation?.name || "unknown",
-            };
-
-            // Create two identical cards for matching
-            cards.push({ ...pokemonData, cardId: `${details.id}-1` });
-            cards.push({ ...pokemonData, cardId: `${details.id}-2` });
-          }),
-        );
-
-        const shuffledCards = shuffleArray(cards);
-        setPokemonCards(shuffledCards);
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to fetch Pokemon");
-        setLoading(false);
-      }
-    };
-
     fetchPokemon();
   }, []);
 
   const handleCardClick = (clickedCard) => {
-    // Prevent clicking if card is already flipped or matched
     if (
       flippedCards.length === 2 ||
       flippedCards.some((card) => card.cardId === clickedCard.cardId) ||
@@ -86,19 +86,15 @@ export default function MemoryGame() {
     if (newFlippedCards.length === 2) {
       setAttempts((prev) => prev + 1);
 
-      // Check if cards match
       if (newFlippedCards[0].id === newFlippedCards[1].id) {
-        // Match found
         setMatchedCards((prev) => [...prev, clickedCard.id]);
         setScore((prev) => prev + 10);
         setFlippedCards([]);
 
-        // Check if game is won
         if (matchedCards.length + 1 === pokemonCards.length / 2) {
           setGameWon(true);
         }
       } else {
-        // No match - flip cards back after delay
         setTimeout(() => {
           setFlippedCards([]);
         }, 1000);
@@ -106,13 +102,13 @@ export default function MemoryGame() {
     }
   };
 
-  const resetGame = () => {
+  const resetGame = async () => {
     setFlippedCards([]);
     setMatchedCards([]);
     setScore(0);
     setAttempts(0);
     setGameWon(false);
-    setPokemonCards((prev) => shuffleArray([...prev]));
+    await fetchPokemon();
   };
 
   const isCardFlipped = (card) => {
@@ -122,67 +118,62 @@ export default function MemoryGame() {
     );
   };
 
-  const isCardMatched = (card) => {
-    return matchedCards.includes(card.id);
-  };
-
-  if (loading) return <div className="bg-text-primary"></div>;
   if (error) return <div>{error}</div>;
 
-  const handleLoadingComplete = () => {
-    setShowLoading(false);
-  };
-
   return (
-    <div className="from-rock-base via-rock-light to-rock-lightest flex min-h-screen w-screen flex-col items-center justify-center bg-gradient-to-r bg-cover bg-center">
-      {/* {showLoading && (
-        <Loading isDataLoading={loading} onComplete={handleLoadingComplete} />
-      )} */}
-
+    <div className="relative flex h-screen w-screen flex-col items-center justify-center overflow-hidden">
       <AudioPlayer />
       <Navbar />
 
-      <div className="mt-16 flex w-full flex-col items-center">
+      {/* Background Image */}
+      <div className="fixed inset-0 z-0">
+        <img
+          src="/assets/game_bg.gif"
+          alt="Game Background"
+          className="h-full w-full object-cover blur-[2px]"
+        />
+        <div className="bg-text-tertiary absolute inset-0 mix-blend-multiply"></div>
+      </div>
+
+      <div className="relative z-10 mt-24 flex h-[670px] flex-col items-center">
         {/* Game Header */}
-        {/* <div className="mb-8 text-center">
-          <div className="flex justify-center gap-8 text-lg font-semibold text-white [text-shadow:1px_1px_2px_rgba(0,0,0,0.8)]">
-            <div>Score: {score}</div>
-            <div>Attempts: {attempts}</div>
-            <div>
-              Matches: {matchedCards.length}/{pokemonCards.length / 2}
+        <div className="w-[1240px] pl-8">
+          <div className="flex flex-row items-center justify-between gap-4">
+            <div className="flex flex-row items-center justify-center gap-6">
+              <div className="stat backdrop-blur-sm">Score: {score}</div>
+              <div className="stat backdrop-blur-sm">Attempts: {attempts}</div>
+              <div className="stat backdrop-blur-sm">
+                Matches: {matchedCards.length}/{pokemonCards.length / 2}
+              </div>
             </div>
-            <button
-              onClick={resetGame}
-              className="rounded-lg bg-red-500 px-6 py-2 font-semibold text-white transition-colors hover:bg-red-600"
-            >
+            <button onClick={resetGame} className="main-btn backdrop-blur-sm">
               Reset Game
             </button>
           </div>
-        </div> */}
+        </div>
 
-        {/* Game Won Modal */}
-        {gameWon && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="rounded-lg bg-white p-8 text-center shadow-2xl">
-              <h2 className="mb-4 text-3xl font-bold text-green-600">
+        <Dialog open={gameWon} onOpenChange={setGameWon}>
+          <DialogContent>
+            <DialogHeader className="flex flex-col items-center justify-center">
+              <DialogTitle className="pb-2 text-3xl font-bold">
                 🎉 Congratulations! 🎉
-              </h2>
-              <p className="mb-2 text-lg">You won the game!</p>
-              <p className="mb-4 text-gray-600">
-                Score: {score} | Attempts: {attempts}
-              </p>
-              <button
-                onClick={resetGame}
-                className="rounded-lg bg-blue-500 px-6 py-2 text-white transition-colors hover:bg-blue-600"
-              >
-                Play Again
-              </button>
-            </div>
-          </div>
-        )}
+              </DialogTitle>
+              <DialogDescription className="flex flex-col items-center justify-center gap-4">
+                <p>You have successfully completed the game!</p>
+                <p>
+                  Score: {score} | Attempts: {attempts}
+                </p>
+                <button onClick={resetGame} className="main-btn">
+                  Play Again
+                </button>
+                <ConfettiSideCannons />
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
 
         {/* Game Board */}
-        <div className="flex w-[1400px] flex-wrap justify-center gap-0">
+        <div className="relative z-10 -m-2 flex w-[1400px] flex-wrap justify-center">
           {pokemonCards.map((card) => (
             <div
               key={card.cardId}
@@ -193,18 +184,21 @@ export default function MemoryGame() {
                 className={`transform-style-preserve-3d transition-transform duration-700 ${isCardFlipped(card) ? "rotate-y-180" : ""} ${!isCardFlipped(card) ? "hover:scale-105" : ""}`}
                 style={{ transformStyle: "preserve-3d" }}
               >
-                {/* Card Back - Only visible when not flipped */}
+                {/* Card Back - Visible when not flipped */}
                 <div
                   className="backface-hidden"
                   style={{ backfaceVisibility: "hidden" }}
                 >
                   <div className="bg-pokeball-blue w-68 scale-85 h-[330px] rounded-lg border-2 border-gray-300 p-4 shadow-lg transition-shadow hover:shadow-xl">
-                    <div className="flex h-full w-full items-center justify-center rounded-lg border-4 border-white">
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-4 border-white">
                       <img
                         src="/assets/Pokemon.svg"
                         alt="pokeball"
                         className="mx-auto mb-2 h-16 w-16"
                       />
+                      <p className="text-center font-medium text-white">
+                        Click to Flip
+                      </p>
                     </div>
                   </div>
                 </div>

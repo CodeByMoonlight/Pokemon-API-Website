@@ -3,6 +3,7 @@ import "./App.css";
 import axios from "axios";
 import PokemonCard from "./components/PokemonCard";
 import { Link } from "react-router-dom";
+import NavigationLink from "./components/NavigationLink";
 import Navbar from "./components/navbar.jsx";
 import AudioPlayer from "./components/AudioPlayer.jsx";
 import Footer from "./components/Footer.jsx";
@@ -14,9 +15,16 @@ function App() {
   const [pokemonCard, setPokemonCard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showLoading, setShowLoading] = useState(true);
+
+  // Check if this is the first visit in this session
+  const [showLoading, setShowLoading] = useState(() => {
+    return !sessionStorage.getItem("hasSeenLoading");
+  });
+
   const handleLoadingComplete = () => {
     setShowLoading(false);
+    // Mark that loading has been seen in this session
+    sessionStorage.setItem("hasSeenLoading", "true");
   };
 
   // Fetch initial 20 Pokemon for homepage
@@ -93,9 +101,9 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-36">
-      {/* {showLoading && (
+      {showLoading && (
         <Loading isDataLoading={loading} onComplete={handleLoadingComplete} />
-      )} */}
+      )}
 
       <Navbar />
 
@@ -182,9 +190,12 @@ function App() {
             </ScrollReveal>
 
             <ScrollReveal direction="up" delay={500}>
-              <Link to="/pokedex">
+              <NavigationLink
+                to="/pokedex"
+                loadingOptions={{ minLoadingTime: 1500 }}
+              >
                 <button className="main-btn">View More</button>
-              </Link>
+              </NavigationLink>
             </ScrollReveal>
           </div>
         </div>
@@ -203,9 +214,12 @@ function App() {
               board. Stay sharp, move fast, and prove that your memory is as
               strong as your battling skills
             </p>
-            <Link to="/memory-game">
+            <NavigationLink
+              to="/memory-game"
+              loadingOptions={{ minLoadingTime: 1200 }}
+            >
               <button className="main-btn">Play Game</button>
-            </Link>
+            </NavigationLink>
           </div>
 
           <div className="w-1/2">

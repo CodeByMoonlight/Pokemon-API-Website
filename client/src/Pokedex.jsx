@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
 import PokemonCard from "./components/PokemonCard.jsx";
-import PokemonView from "./PokemonView";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Navbar from "./components/navbar.jsx";
-import Loading from "./components/Loading.jsx";
 import AudioPlayer from "./components/AudioPlayer.jsx";
 import { Input } from "@/components/ui/input";
 import { CircleChevronRight } from "lucide-react";
@@ -15,19 +13,13 @@ export default function Pokedex() {
   // State for Pokemon data
   const { pageNumber } = useParams();
   const [pokemonCard, setPokemonCard] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [pokemonLoading, setPokemonLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showLoading, setShowLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber) || 1);
   const [pagination, setPagination] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
-  const handleLoadingComplete = () => {
-    setShowLoading(false);
-  };
 
   // Update currentPage when pageNumber param changes
   useEffect(() => {
@@ -39,12 +31,6 @@ export default function Pokedex() {
   useEffect(() => {
     const fetchPokemon = async () => {
       try {
-        if (currentPage === 1) {
-          setLoading(true);
-        } else {
-          setPokemonLoading(true);
-        }
-
         const response = await axios.get(
           `http://localhost:8080/pokedex?page=${currentPage}&limit=20`,
         );
@@ -76,12 +62,8 @@ export default function Pokedex() {
         card.sort((a, b) => a.id - b.id);
 
         setPokemonCard(card);
-        setLoading(false);
-        setPokemonLoading(false);
       } catch (err) {
         setError("Failed to fetch Pokemon");
-        setLoading(false);
-        setPokemonLoading(false);
       }
     };
 
@@ -236,16 +218,11 @@ export default function Pokedex() {
     ? searchResults
     : filteredPokemon || pokemonCard;
 
-  if (loading) return <div className="bg-text-primary"></div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="flex flex-col items-center justify-center">
-      {/* {showLoading && (
-        <Loading isDataLoading={loading} onComplete={handleLoadingComplete} />
-      )}
-
-      <AudioPlayer /> */}
+      <AudioPlayer />
       <Navbar />
 
       <div className="relative flex flex-col items-center justify-center">

@@ -1,5 +1,6 @@
 import "../App.css";
 import { Link } from "react-router-dom";
+import NavigationLink from "./NavigationLink";
 import { HiOutlineHome } from "react-icons/hi";
 import { BiBookOpen } from "react-icons/bi";
 import { IoGameControllerOutline } from "react-icons/io5";
@@ -16,7 +17,6 @@ export default function Navbar() {
     if (path === "/") setCurrentID("header");
     else if (path.startsWith("/pokedex")) setCurrentID("pokedex");
     else if (path === "/memory-game") setCurrentID("game");
-    console.log(path);
   }, [location.pathname]);
 
   const [showNavbar, setShowNavbar] = useState(true);
@@ -51,27 +51,30 @@ export default function Navbar() {
       </div>
 
       <div className="align-center flex flex-row items-center justify-center gap-4">
-        <Link
+        <NavigationLink
           to="/"
           className={`nav-item ${currentId === "header" ? "active" : ""}`}
+          loadingOptions={{ minLoadingTime: 800 }}
         >
           <HiOutlineHome className="h-[20px] w-[20px]" />
           HOME
-        </Link>
-        <Link
+        </NavigationLink>
+        <NavigationLink
           to="/pokedex/page/1"
           className={`nav-item ${currentId === "pokedex" ? "active" : ""}`}
+          loadingOptions={{ minLoadingTime: 1500 }}
         >
           <BiBookOpen className="h-[20px] w-[20px]" />
           POKEDEX
-        </Link>
-        <Link
+        </NavigationLink>
+        <NavigationLink
           to="/memory-game"
           className={`nav-item ${currentId === "game" ? "active" : ""}`}
+          loadingOptions={{ minLoadingTime: 1200 }}
         >
           <IoGameControllerOutline className="h-[20px] w-[20px]" />
           GAME
-        </Link>
+        </NavigationLink>
       </div>
       <div className="flex flex-row gap-2">
         <a

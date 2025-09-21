@@ -25,10 +25,38 @@ app.get("/", async (req, res) => {
 
 app.get("/memory-game", async (req, res) => {
   try {
-    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=5");
-    const data = await response.json();
-    res.json(data);
+    // Get total count first to know the range
+    const countResponse = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1");
+    const countData = await countResponse.json();
+    const totalPokemon = countData.count;
+    
+    // Generate 5 random Pokemon IDs (we need 5 for 10 cards - 5 pairs)
+    const randomIds = [];
+    while (randomIds.length < 5) {
+      const randomId = Math.floor(Math.random() * Math.min(totalPokemon, 1010)) + 1; // Limit to first 1010 for better artwork
+      if (!randomIds.includes(randomId)) {
+        randomIds.push(randomId);
+      }
+    }
+    
+    // Fetch the random Pokemon
+    const randomPokemon = await Promise.all(
+      randomIds.map(async (id) => {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+        const data = await response.json();
+        return {
+          name: data.name,
+          url: `https://pokeapi.co/api/v2/pokemon/${id}/`
+        };
+      })
+    );
+    
+    res.json({
+      count: randomPokemon.length,
+      results: randomPokemon
+    });
   } catch (error) {
+    console.error("Memory game fetch error:", error);
     res.status(500).json({ error: "Failed to fetch Pokemon data" });
   }
 });
