@@ -1,5 +1,6 @@
 // Pokemon type constants and utilities
 
+// Define Pokemon types
 export const PokemonType = {
   Normal: "normal",
   Fire: "fire",
@@ -21,6 +22,7 @@ export const PokemonType = {
   Fairy: "fairy",
 };
 
+// Type color mappings for gradients, text, backgrounds, and icons
 export const typeColors = {
   normal: "from-normal-base via-normal-light to-normal-lightest",
   fire: "from-fire-base via-fire-light to-fire-lightest",
@@ -42,6 +44,7 @@ export const typeColors = {
   fairy: "from-fairy-base via-fairy-light to-fairy-lightest",
 };
 
+// Text, background, and icon color mappings
 export const typeText = {
   normal: "text-normal-dark",
   fire: "text-fire-dark",
@@ -63,6 +66,7 @@ export const typeText = {
   fairy: "text-fairy-dark",
 };
 
+// Background color mappings
 export const typeBg = {
   normal: "bg-normal-lightest",
   fire: "bg-fire-lightest",
@@ -84,6 +88,7 @@ export const typeBg = {
   fairy: "bg-fairy-lightest",
 };
 
+// Icon mappings
 export const typeIcons = {
   normal: "Normal (1).svg",
   fire: "Fire (1).svg",
@@ -149,6 +154,7 @@ export const getActiveBorderClass = (pokemonType) => {
   }
 };
 
+// Stat color mappings for stat bars
 export const getStatColors = (pokemonType) => {
   switch (pokemonType) {
     case PokemonType.Normal:

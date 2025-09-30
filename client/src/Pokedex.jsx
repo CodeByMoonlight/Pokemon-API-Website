@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import axios from "axios";
 import PokemonCard from "./components/PokemonCard.jsx";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -8,8 +7,8 @@ import AudioPlayer from "./components/AudioPlayer.jsx";
 import { Input } from "@/components/ui/input";
 import { CircleChevronRight } from "lucide-react";
 import { CircleChevronLeft } from "lucide-react";
-import { FaChevronLeft } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
 
 export default function Pokedex() {
   // State for Pokemon data
@@ -126,6 +125,16 @@ export default function Pokedex() {
 
     return (
       <div className="flex items-center justify-center gap-4 py-4">
+        {/* Left Arrow */}
+        {currentPage > 1 && (
+          <button
+            onClick={handlePreviousPage}
+            className="border-text-tertiary hover:bg-pokeball-blue h-10 w-10 rounded-md border-2 bg-white hover:text-white"
+          >
+            <FaChevronLeft className="m-auto text-xs sm:text-sm xl:text-sm" />
+          </button>
+        )}
+
         {startPage > 1 && (
           <>
             <button
@@ -237,37 +246,42 @@ export default function Pokedex() {
       <AudioPlayer />
       <Navbar />
 
+      {/* Header */}
       <div className="relative flex flex-col items-center justify-center">
+        {/* Background */}
         <div className="overflow-hidden">
           <img
             src="/assets/pokedex_img.gif"
             alt="hero_img"
-            className="h-100 w-screen bg-cover bg-center object-cover object-center blur-[4px]"
+            className="h-100 w-screen bg-cover bg-center object-cover object-center blur-sm"
           />
           <div className="bg-text-tertiary absolute inset-0 mix-blend-multiply"></div>
         </div>
 
-        <div className="absolute flex h-fit flex-col items-center justify-center gap-4 p-6">
-          <h2 className="text-3xl font-bold text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)] sm:text-4xl">
+        {/* Header Body */}
+        <div className="absolute flex h-fit flex-col items-center justify-center gap-4 p-6 text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)]">
+          <h2 className="text-3xl font-bold sm:text-4xl">
             Explore Pokémon stats, abilities, and evolutions
           </h2>
-          <p className="max-w-[600px] font-medium text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)]">
+          <p className="max-w-[36rem] font-medium">
             Dive into the Pokémon universe with our complete Pokédex. Learn
             about each Pokémon’s stats, abilities, and evolution paths all in
             one place.
           </p>
           <Input
             placeholder="Search Pokémon by name..."
-            className="max-w-[600px] bg-white"
+            className="max-w-[36rem] bg-white"
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="flex max-w-[1150px] flex-col items-center justify-center">
+      {/* Body */}
+      <div className="flex max-w-[72rem] flex-col items-center justify-center">
         <div className="flex w-full flex-row items-center justify-between py-4">
           <h3 className="text-text-primary text-2xl font-bold">Pokémon List</h3>
+          {/* Upper Pagination & Arrows - Show if user is not searching*/}
           {!isSearching && (
             <div className="flex flex-row items-center gap-4">
               <CircleChevronLeft
@@ -284,14 +298,14 @@ export default function Pokedex() {
             </div>
           )}
         </div>
-        <div className="relative">
-          <div className="flex flex-wrap justify-center gap-5">
-            {displayedPokemon?.map((poke, index) => (
-              <Link to={`/view/${poke.id}`} key={index}>
-                <PokemonCard pokemon={poke} />
-              </Link>
-            ))}
-          </div>
+
+        {/* Pokemon Cards */}
+        <div className="flex flex-wrap justify-center gap-5">
+          {displayedPokemon?.map((poke, index) => (
+            <Link to={`/view/${poke.id}`} key={index}>
+              <PokemonCard pokemon={poke} />
+            </Link>
+          ))}
         </div>
 
         {!isSearching && renderPaginationNumbers()}

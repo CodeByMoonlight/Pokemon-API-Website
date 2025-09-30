@@ -1,4 +1,3 @@
-import "../App.css";
 import { Link } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa6";
 import { FaXTwitter } from "react-icons/fa6";
@@ -9,8 +8,8 @@ import { AiFillTikTok } from "react-icons/ai";
 export default function Footer() {
   return (
     <nav
-      id="about"
-      className="absolute bottom-0 left-0 right-0 z-50 flex w-full flex-row items-center justify-between bg-white/50 px-[8px] py-3 backdrop-blur-sm"
+      id="footer"
+      className="absolute bottom-0 left-0 right-0 z-50 flex w-full flex-row items-center justify-between bg-white/50 px-2 py-3 backdrop-blur-sm"
     >
       <div className="w-1/3">
         <Link
@@ -66,7 +65,7 @@ export default function Footer() {
         </a>
       </div>
       <div className="w-1/3 text-right">
-        <p className="text-text-primary text-[10px] font-semibold sm:text-base">
+        <p className="text-text-primary text-[0.625rem] font-semibold sm:text-base">
           © 2025 All Rights Reserved
         </p>
       </div>

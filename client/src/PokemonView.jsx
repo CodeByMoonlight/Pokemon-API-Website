@@ -14,9 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
 import {
-  PokemonType,
   typeColors,
   typeText,
   typeBg,
@@ -28,7 +26,6 @@ import {
 
 export default function PokemonView() {
   const { pokemonId } = useParams();
-  const navigate = useNavigate();
   const [pokemon, setPokemon] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,6 +51,7 @@ export default function PokemonView() {
     return evolutions;
   }
 
+  // Fetch Pokemon Data
   useEffect(() => {
     const fetchPokemonData = async () => {
       try {
@@ -130,6 +128,7 @@ export default function PokemonView() {
     }
   }, [pokemonId]);
 
+  // Function to set pokemon gender value equivalent
   const getGenderDisplay = (genderRate) => {
     const genderData = {
       "-1": [{ icon: BsGenderAmbiguous, text: "Genderless" }],
@@ -256,14 +255,14 @@ export default function PokemonView() {
         {/*Main Details*/}
         <div className="mt-4 flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-5">
           {/*Pokemon Image*/}
-          <div className="relative flex h-fit w-full max-w-[300px] flex-row sm:max-w-[350px] lg:max-w-[450px]">
+          <div className="relative flex h-fit w-full max-w-[18.75rem] flex-row sm:max-w-[20rem] lg:max-w-[28rem]">
             <img
               src={`/assets/${typeIcons[primaryType]}`}
               alt={pokemon.en_name}
               className="w-48 opacity-50 sm:w-64 lg:w-80"
             />
             <h1
-              className={`absolute left-0 top-6 text-2xl font-semibold sm:top-8 sm:text-3xl lg:top-10 lg:text-5xl ${typeText[primaryType]}`}
+              className={`absolute left-0 top-6 text-3xl font-semibold sm:top-8 sm:text-4xl lg:top-10 lg:text-5xl ${typeText[primaryType]}`}
             >
               {pokemon.jp_name}
             </h1>
@@ -279,7 +278,7 @@ export default function PokemonView() {
           </div>
 
           {/*Pokemon Details*/}
-          <div className="flex h-auto w-screen flex-col px-2 sm:px-5 lg:h-[650px] lg:w-[750px]">
+          <div className="flex h-auto w-screen flex-col px-2 sm:px-5 lg:h-[40rem] lg:w-[46rem]">
             <Tabs defaultValue="about" className="">
               <TabsList className="">
                 <TabsTrigger
@@ -317,10 +316,7 @@ export default function PokemonView() {
                         ([key, value], index) => {
                           if (Array.isArray(value)) {
                             return (
-                              <div
-                                key={index}
-                                className="flex flex-row gap-3 sm:gap-5"
-                              >
+                              <div key={index} className="flex flex-row gap-5">
                                 {(value || []).map((item, idx) => (
                                   <div
                                     key={idx}
@@ -416,7 +412,7 @@ export default function PokemonView() {
                         >
                           <Tooltip>
                             <TooltipTrigger>
-                              <div className="rounded-full bg-white p-[4px] shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110 sm:p-[6px]">
+                              <div className="rounded-full bg-white p-1 shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110 sm:p-1.5">
                                 <img
                                   src={`/assets/${typeIcons[weakness.name]}`}
                                   alt={pokemon.en_name}
@@ -446,7 +442,7 @@ export default function PokemonView() {
                         >
                           <Tooltip>
                             <TooltipTrigger>
-                              <div className="rounded-full bg-white p-[4px] shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110 sm:p-[6px]">
+                              <div className="rounded-full bg-white p-1 shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110 sm:p-1.5">
                                 <img
                                   src={`/assets/${typeIcons[resistance.name]}`}
                                   alt={pokemon.en_name}

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "../App.css";
 
 export default function Loading({
   duration = 9000,

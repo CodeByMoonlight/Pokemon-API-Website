@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import axios from "axios";
 import PokemonCard from "./components/PokemonCard.jsx";
 import Navbar from "./components/navbar.jsx";
@@ -14,6 +13,7 @@ import {
 import { ConfettiSideCannons } from "./components/ui/confetti.jsx";
 
 export default function MemoryGame() {
+  // States
   const [pokemonCards, setPokemonCards] = useState([]);
   const [error, setError] = useState(null);
   const [flippedCards, setFlippedCards] = useState([]);
@@ -22,6 +22,7 @@ export default function MemoryGame() {
   const [attempts, setAttempts] = useState(0);
   const [gameWon, setGameWon] = useState(false);
 
+  // Shuffle array utility
   const shuffleArray = (array) => {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -31,6 +32,7 @@ export default function MemoryGame() {
     return shuffled;
   };
 
+  // Fetch Pokemon
   const fetchPokemon = async () => {
     try {
       const response = await axios.get("http://localhost:8080/memory-game");
@@ -71,6 +73,7 @@ export default function MemoryGame() {
     fetchPokemon();
   }, []);
 
+  // Handle card click function
   const handleCardClick = (clickedCard) => {
     if (
       flippedCards.length === 2 ||
@@ -102,6 +105,7 @@ export default function MemoryGame() {
     }
   };
 
+  // Reset game function
   const resetGame = async () => {
     setFlippedCards([]);
     setMatchedCards([]);
@@ -111,6 +115,7 @@ export default function MemoryGame() {
     await fetchPokemon();
   };
 
+  // Check if card is flipped or matched
   const isCardFlipped = (card) => {
     return (
       flippedCards.some((flipped) => flipped.cardId === card.cardId) ||
@@ -130,31 +135,33 @@ export default function MemoryGame() {
         <img
           src="/assets/game_bg.gif"
           alt="Game Background"
-          className="h-full w-full object-cover blur-[2px]"
+          className="blur-xs h-full w-full object-cover"
         />
         <div className="bg-text-tertiary absolute inset-0 mix-blend-multiply"></div>
       </div>
 
-      <div className="relative z-10 mt-24 flex flex-col items-center xl:h-[670px]">
+      {/* Body */}
+      <div className="relative z-10 mt-24 flex flex-col items-center xl:h-[42rem]">
         {/* Game Header */}
-        <div className="px -8 w-full xl:w-[1240px]">
+        <div className="w-full px-8 xl:w-[77.5rem]">
           <div className="flex flex-row items-center justify-between gap-4">
             <div className="flex flex-row items-center justify-center gap-6">
-              <div className="stat backdrop-blur-sm">Score: {score}</div>
-              <div className="stat backdrop-blur-sm">Attempts: {attempts}</div>
-              <div className="stat backdrop-blur-sm">
+              <div className="stat">Score: {score}</div>
+              <div className="stat">Attempts: {attempts}</div>
+              <div className="stat">
                 Matches: {matchedCards.length}/{pokemonCards.length / 2}
               </div>
             </div>
             <button
               onClick={resetGame}
-              className="main-btn rounded-[8px] px-5 py-2 text-sm backdrop-blur-sm sm:text-base md:text-lg"
+              className="main-btn rounded-lg px-5 py-3 text-sm backdrop-blur-sm sm:text-base"
             >
               Reset Game
             </button>
           </div>
         </div>
 
+        {/* Win Dialog */}
         <Dialog open={gameWon} onOpenChange={setGameWon}>
           <DialogContent>
             <DialogHeader className="flex flex-col items-center justify-center">
@@ -168,7 +175,7 @@ export default function MemoryGame() {
                 </p>
                 <button
                   onClick={resetGame}
-                  className="main-btn rounded-[8px] px-5 py-2 text-sm sm:text-base md:text-lg"
+                  className="main-btn rounded-lg px-5 py-2 text-sm sm:text-base md:text-lg"
                 >
                   Play Again
                 </button>
@@ -179,23 +186,19 @@ export default function MemoryGame() {
         </Dialog>
 
         {/* Game Board */}
-        <div className="relative z-10 -m-2 flex w-full flex-wrap justify-center xl:max-w-[1400px]">
+        <div className="relative z-10 -m-2 flex w-full flex-wrap justify-center xl:max-w-[88rem]">
           {pokemonCards.map((card) => (
             <div
               key={card.cardId}
               onClick={() => handleCardClick(card)}
-              className="h-[297px] w-[244.8px] cursor-pointer"
+              className="h-[18.563rem] w-[15.3rem] cursor-pointer"
             >
               <div
                 className={`transform-style-preserve-3d transition-transform duration-700 ${isCardFlipped(card) ? "rotate-y-180" : ""} ${!isCardFlipped(card) ? "hover:scale-105" : ""}`}
-                style={{ transformStyle: "preserve-3d" }}
               >
                 {/* Card Back - Visible when not flipped */}
-                <div
-                  className="backface-hidden"
-                  style={{ backfaceVisibility: "hidden" }}
-                >
-                  <div className="bg-pokeball-blue w-68 scale-85 h-[330px] rounded-lg border-2 border-gray-300 p-4 shadow-lg transition-shadow hover:shadow-xl">
+                <div className="backface-hidden">
+                  <div className="bg-pokeball-blue w-68 scale-85 h-[20.625rem] rounded-lg border-2 border-gray-300 p-4 shadow-lg transition-shadow hover:shadow-xl">
                     <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border-4 border-white">
                       <img
                         src="/assets/Pokemon.svg"
@@ -210,13 +213,7 @@ export default function MemoryGame() {
                 </div>
 
                 {/* Card Front - Only visible when flipped */}
-                <div
-                  className="backface-hidden rotate-y-180 absolute inset-0"
-                  style={{
-                    backfaceVisibility: "hidden",
-                    transform: "rotateY(180deg)",
-                  }}
-                >
+                <div className="backface-hidden rotate-y-180 absolute inset-0">
                   <PokemonCard pokemon={card} className="scale-85" />
                 </div>
               </div>

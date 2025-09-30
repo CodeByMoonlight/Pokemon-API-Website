@@ -1,4 +1,3 @@
-import "../App.css";
 import { Link } from "react-router-dom";
 import NavigationLink from "./NavigationLink";
 import { HiOutlineHome } from "react-icons/hi";
@@ -13,6 +12,7 @@ export default function Navbar() {
   const location = useLocation();
   const [currentId, setCurrentID] = useState("header");
 
+  // Update currentId based on location
   useEffect(() => {
     const path = location.pathname;
     if (path === "/") setCurrentID("header");
@@ -21,6 +21,7 @@ export default function Navbar() {
     else if (path === "/rank") setCurrentID("rank");
   }, [location.pathname]);
 
+  // Show/hide navbar on scroll
   const [showNavbar, setShowNavbar] = useState(true);
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -38,7 +39,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`z-1 fixed left-0 right-0 top-0 mx-5 flex flex-row items-center justify-between rounded-[12px] bg-white/60 p-[8px] backdrop-blur-sm transition-transform duration-300 ${showNavbar ? "translate-y-5" : "-translate-y-full"}`}
+      className={`z-1 fixed left-0 right-0 top-0 mx-5 flex flex-row items-center justify-between rounded-2xl bg-white/60 p-2 backdrop-blur-sm transition-transform duration-300 ${showNavbar ? "translate-y-5" : "-translate-y-full"}`}
     >
       <div className="">
         <Link
@@ -58,7 +59,7 @@ export default function Navbar() {
           className={`nav-item hidden sm:flex ${currentId === "header" ? "active" : ""}`}
           loadingOptions={{ minLoadingTime: 800 }}
         >
-          <HiOutlineHome className="h-[20px] w-[20px]" />
+          <HiOutlineHome className="h-5 w-5" />
           <span className="hidden sm:inline">HOME</span>
         </NavigationLink>
         <NavigationLink
@@ -66,7 +67,7 @@ export default function Navbar() {
           className={`nav-item hidden sm:flex ${currentId === "pokedex" ? "active" : ""}`}
           loadingOptions={{ minLoadingTime: 2000 }}
         >
-          <BiBookOpen className="h-[20px] w-[20px]" />
+          <BiBookOpen className="h-5 w-5" />
           <span className="hidden sm:inline">POKEDEX</span>
         </NavigationLink>
         <NavigationLink
@@ -74,7 +75,7 @@ export default function Navbar() {
           className={`nav-item hidden sm:flex ${currentId === "game" ? "active" : ""}`}
           loadingOptions={{ minLoadingTime: 1200 }}
         >
-          <IoGameControllerOutline className="h-[20px] w-[20px]" />
+          <IoGameControllerOutline className="h-5 w-5" />
           <span className="hidden sm:inline">GAME</span>
         </NavigationLink>
       </div>
@@ -85,7 +86,7 @@ export default function Navbar() {
           rel="noopener noreferrer"
           className="nav-item-btn"
         >
-          <FaGithub className="h-[20px] w-[20px]" />
+          <FaGithub className="h-5 w-5" />
         </a>
         <a
           href="https://github.com/PokeAPI/pokeapi"
@@ -96,7 +97,7 @@ export default function Navbar() {
           <img
             src="/assets/Pokemon.svg"
             alt="pokeball"
-            className="bg-text-primary border-text-primary h-[20px] w-[20px] rounded-full border-2"
+            className="bg-text-primary border-text-primary h-5 w-5 rounded-full border-2"
           />
         </a>
       </div>

@@ -14,7 +14,7 @@ import { NavigationProvider } from "./contexts/NavigationContext.jsx";
 import ProgressBar from "./components/ProgressBar.jsx";
 import { useNavigation } from "./contexts/NavigationContext.jsx";
 
-// Wrapper component to show progress bar
+// component to show progress bar
 const AppWithProgressBar = ({ children }) => {
   const { isLoading, progress } = useNavigation();
 
@@ -26,6 +26,7 @@ const AppWithProgressBar = ({ children }) => {
   );
 };
 
+// Define routes
 const route = createBrowserRouter([
   {
     path: "/",
@@ -65,6 +66,7 @@ const route = createBrowserRouter([
   },
 ]);
 
+// Render the application
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <NavigationProvider>
