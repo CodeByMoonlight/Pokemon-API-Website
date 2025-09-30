@@ -1,6 +1,6 @@
 # Pokemon Website
 
-![Welcome Banner](client\public\assets\read_me.gif)
+![Welcome Banner](./client/public/assets/read_me.gif)
 
 ## Table of Contents
 
