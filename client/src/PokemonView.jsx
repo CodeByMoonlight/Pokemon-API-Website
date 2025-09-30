@@ -25,6 +25,7 @@ import {
 } from "./utils/pokemonTypes";
 import { BiSolidEdit } from "react-icons/bi";
 import { AiFillStar } from "react-icons/ai";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 export default function PokemonView() {
   const { pokemonId } = useParams();
@@ -191,6 +192,46 @@ export default function PokemonView() {
   const handleCancelEdit = () => {
     setIsEditingStory(false);
     setEditedStory(pokemon.story);
+  };
+
+  const handleDeleteStory = async () => {
+    if (!pokemon.hasCustomStory) {
+      alert("No custom story to delete");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete the custom story? This will revert to the original Pokemon story.",
+    );
+    if (!confirmed) return;
+
+    setSaving(true);
+    try {
+      await axios.delete(`http://localhost:8080/pokemon/${pokemonId}/story`);
+
+      // Fetch the original story from Pokemon API
+      const response = await axios.get(`http://localhost:8080/${pokemonId}`);
+      const details = response.data;
+      const speciesData = (await axios.get(details.species.url)).data;
+
+      const originalStory =
+        speciesData.flavor_text_entries
+          .find((entry) => entry.language.name === "en")
+          ?.flavor_text.replace(/\f/g, " ") || "No description available";
+
+      // Update local state with original story
+      setPokemon((prev) => ({
+        ...prev,
+        story: originalStory,
+        hasCustomStory: false,
+      }));
+      setEditedStory(originalStory);
+    } catch (err) {
+      console.error("Failed to delete story:", err);
+      alert("Failed to delete story. Please try again.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Function to set pokemon gender value equivalent
@@ -379,19 +420,36 @@ export default function PokemonView() {
                       </h2>
                       {!isEditingStory ? (
                         isUpdateMode && (
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <p
-                                onClick={handleEditStory}
-                                className="hover:bg-pokeball-dark text-text-primary hover:bg-pokeball-blue cursor-pointer rounded-full bg-white p-2 transition-colors duration-200 hover:scale-105 hover:text-white hover:shadow-blue-950"
-                              >
-                                <BiSolidEdit className="" />
-                              </p>
-                            </TooltipTrigger>
-                            <TooltipContent className="capitalize">
-                              <p>Edit</p>
-                            </TooltipContent>
-                          </Tooltip>
+                          <div className="flex gap-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <p
+                                  onClick={handleEditStory}
+                                  className="hover:bg-pokeball-dark text-text-primary hover:bg-pokeball-blue cursor-pointer rounded-full bg-white p-2 transition-colors duration-200 hover:scale-105 hover:text-white hover:shadow-blue-950"
+                                >
+                                  <BiSolidEdit className="" />
+                                </p>
+                              </TooltipTrigger>
+                              <TooltipContent className="capitalize">
+                                <p>Edit</p>
+                              </TooltipContent>
+                            </Tooltip>
+                            {pokemon.hasCustomStory && (
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <p
+                                    onClick={handleDeleteStory}
+                                    className="hover:bg-pokeball-dark text-text-primary hover:bg-pokeball-red cursor-pointer rounded-full bg-white p-2 transition-colors duration-200 hover:scale-105 hover:text-white hover:shadow-blue-950"
+                                  >
+                                    <RiDeleteBin6Line className="" />
+                                  </p>
+                                </TooltipTrigger>
+                                <TooltipContent className="capitalize">
+                                  <p>Delete</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            )}
+                          </div>
                         )
                       ) : (
                         <div className="flex gap-2">

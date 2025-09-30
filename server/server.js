@@ -201,6 +201,28 @@ app.put('/pokemon/:id/story', (req, res) => {
   );
 });
 
+// Delete custom Pokemon story
+app.delete('/pokemon/:id/story', (req, res) => {
+  const pokemonId = parseInt(req.params.id);
+  
+  db.run(
+    'DELETE FROM pokemons WHERE pokemon_id = ?',
+    [pokemonId],
+    function(err) {
+      if (err) {
+        console.error('Error deleting Pokemon story:', err.message);
+        res.status(500).json({ error: 'Failed to delete Pokemon story' });
+      } else {
+        if (this.changes === 0) {
+          res.status(404).json({ error: 'Pokemon story not found' });
+        } else {
+          res.json({ message: 'Pokemon story deleted successfully', pokemonId });
+        }
+      }
+    }
+  );
+});
+
 app.get("/:id", async (req, res) => {
   try {
 
