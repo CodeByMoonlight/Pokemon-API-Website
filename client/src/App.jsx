@@ -115,28 +115,28 @@ function App() {
         <img
           src="/assets/transition.svg"
           alt="transition_img"
-          className="absolute left-0 top-60 h-full w-full object-cover"
+          className="absolute left-0 top-36 h-full w-full object-cover md:top-40 lg:top-56 xl:top-60"
         />
-        <div className="-translate-y-70 absolute top-1/2 flex h-fit flex-col items-center justify-center">
-          <h2 className="Russo-One text-[66px] font-bold text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)]">
-            Catch ’Em All Online
+        <div className="xl:-translate-y-68 absolute top-1/2 flex h-fit -translate-y-24 flex-col items-center justify-center sm:-translate-y-36 lg:-translate-y-44">
+          <h2 className="Russo-One mb-2 text-center text-4xl font-bold text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)] sm:text-5xl md:text-6xl xl:text-7xl">
+            Catch 'Em All Online
           </h2>
-          <p className="mb-6 w-[600px] text-lg font-semibold text-white [text-shadow:3px_2px_4px_rgba(0,0,0,0.8)]">
+          <p className="max-w-3/5 mb-6 text-center text-sm font-semibold text-white [text-shadow:3px_2px_4px_rgba(0,0,0,0.8)] sm:text-base md:text-lg">
             Explore the complete Pokédex, challenge yourself with fun memory
             games, and see just how well you know your favorite Pokémon.
           </p>
-          <a
+          <button
             onClick={scrollToPokedex}
-            className="game-font transform cursor-pointer rounded-full p-5 text-center [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)] hover:scale-105"
+            className="game-font rounded-full p-4 text-center text-[10px] [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)] hover:scale-105 lg:p-5 lg:text-xs"
           >
             START EXPLORING
-          </a>
+          </button>
         </div>
 
         <img
           src="/assets/hero.gif"
           alt="hero_img"
-          className="h-[1080px] w-screen bg-cover bg-center object-cover"
+          className="h-[680px] w-screen bg-cover bg-center object-cover sm:h-[780px] md:h-[880px] lg:h-[980px] xl:h-[1080px]"
         />
       </div>
 
@@ -144,7 +144,7 @@ function App() {
       <ScrollReveal direction="fade" duration={1000}>
         <div
           id="pokedex"
-          className="flex max-w-[1150px] flex-col items-center justify-center gap-10 pt-24"
+          className="flex max-w-[1150px] flex-col items-center justify-center gap-10 pt-16 sm:pt-20 md:pt-24"
         >
           <div className="flex flex-col gap-16">
             <ScrollReveal direction="up" delay={200}>
@@ -153,17 +153,17 @@ function App() {
                   <img
                     src="/assets/Pokemon.svg"
                     alt="pokeball"
-                    className="bg-text-primary border-text-primary h-16 w-16 rounded-full border-2"
+                    className="bg-text-primary border-text-primary h-10 w-10 rounded-full border-2 sm:h-14 sm:w-14 md:h-16 md:w-16"
                   />
-                  <h1 className="header">POKÉDEX</h1>
+                  <h1 className="header text-5xl md:text-6xl">POKÉDEX</h1>
                   <img
                     src="/assets/Pokemon.svg"
                     alt="pokeball"
-                    className="bg-text-primary border-text-primary h-16 w-16 rounded-full border-2"
+                    className="bg-text-primary border-text-primary h-10 w-10 rounded-full border-2 sm:h-14 sm:w-14 md:h-16 md:w-16"
                   />
                 </div>
 
-                <p className="subtitle">
+                <p className="subtitle xl:w-7/10 lg:w-9/10 px-2 text-center text-sm sm:px-4 sm:text-base md:px-6 md:text-base">
                   The Pokédex is your ultimate guide to the world of Pokémon.
                   Browse through a complete collection of Pokémon, each with
                   detailed information on their types, abilities, stats,
@@ -194,7 +194,9 @@ function App() {
                 to="/pokedex"
                 loadingOptions={{ minLoadingTime: 1500 }}
               >
-                <button className="main-btn">View More</button>
+                <button className="main-btn rounded-[8px] px-5 py-3 text-sm sm:text-base md:text-lg">
+                  View More
+                </button>
               </NavigationLink>
             </ScrollReveal>
           </div>
@@ -205,11 +207,11 @@ function App() {
       <ScrollReveal direction="up" duration={2000}>
         <div
           id="game"
-          className="pt-25 flex flex-row items-center justify-center gap-10"
+          className="flex max-w-[1300px] flex-col items-center justify-center gap-10 px-8 pt-20 lg:flex-row"
         >
-          <div className="flex w-[750px] flex-col items-center justify-center gap-5 text-center">
-            <h1 className="header">MEMORY GAME</h1>
-            <p className="subtitle mb-5">
+          <div className="w-max-[750px] order-2 flex flex-col items-center justify-center gap-5 text-center lg:order-1">
+            <h1 className="header text-5xl md:text-6xl">MEMORY GAME</h1>
+            <p className="subtitle mb-5 text-sm sm:text-base">
               Challenge yourself to match all the Pokémon pairs hidden on the
               board. Stay sharp, move fast, and prove that your memory is as
               strong as your battling skills
@@ -218,15 +220,17 @@ function App() {
               to="/memory-game"
               loadingOptions={{ minLoadingTime: 1200 }}
             >
-              <button className="main-btn">Play Game</button>
+              <button className="main-btn rounded-[8px] px-5 py-3 text-sm sm:text-base md:text-lg">
+                Play Game
+              </button>
             </NavigationLink>
           </div>
 
-          <div className="w-1/2">
+          <div className="xl:max-w-1/2 order-1 max-w-[450px] lg:order-2">
             <img
               src="/assets/memory.png"
               alt="memory game"
-              className="w-2xl object-cover"
+              className="w-full object-cover"
             />
           </div>
         </div>
@@ -237,18 +241,18 @@ function App() {
         <img
           src="/assets/transition.svg"
           alt="logo"
-          className="absolute left-0 top-0 h-[650px] w-full rotate-180 object-cover"
+          className="absolute left-0 top-0 w-full rotate-180 object-cover sm:h-[500px] lg:h-[650px]"
         />
 
         <img
           src="/assets/Pokemon Logo Pixel.png"
           alt="logo"
-          className="absolute bottom-0 top-80 w-[500px] object-cover"
+          className="lg:top-76 absolute bottom-0 top-44 w-[300px] object-cover sm:top-52 sm:w-[400px] md:w-[500px] xl:top-80"
         />
 
         <img
           src="/assets/footer_img.gif"
-          className="h-[800px] w-screen bg-cover bg-center object-cover object-top"
+          className="h-[500px] w-screen bg-cover bg-center object-cover object-top sm:h-[550px] md:h-[650px] lg:h-[750px] xl:h-[800px]"
         />
         <Footer />
         <AudioPlayer />

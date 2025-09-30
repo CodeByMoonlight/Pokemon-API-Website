@@ -7,6 +7,7 @@ import { IoGameControllerOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FaGithub } from "react-icons/fa";
+import { MdOutlineLeaderboard } from "react-icons/md";
 
 export default function Navbar() {
   const location = useLocation();
@@ -17,6 +18,7 @@ export default function Navbar() {
     if (path === "/") setCurrentID("header");
     else if (path.startsWith("/pokedex")) setCurrentID("pokedex");
     else if (path === "/memory-game") setCurrentID("game");
+    else if (path === "/rank") setCurrentID("rank");
   }, [location.pathname]);
 
   const [showNavbar, setShowNavbar] = useState(true);
@@ -53,27 +55,27 @@ export default function Navbar() {
       <div className="align-center flex flex-row items-center justify-center gap-4">
         <NavigationLink
           to="/"
-          className={`nav-item ${currentId === "header" ? "active" : ""}`}
+          className={`nav-item hidden sm:flex ${currentId === "header" ? "active" : ""}`}
           loadingOptions={{ minLoadingTime: 800 }}
         >
           <HiOutlineHome className="h-[20px] w-[20px]" />
-          HOME
+          <span className="hidden sm:inline">HOME</span>
         </NavigationLink>
         <NavigationLink
           to="/pokedex/page/1"
-          className={`nav-item ${currentId === "pokedex" ? "active" : ""}`}
-          loadingOptions={{ minLoadingTime: 1500 }}
+          className={`nav-item hidden sm:flex ${currentId === "pokedex" ? "active" : ""}`}
+          loadingOptions={{ minLoadingTime: 2000 }}
         >
           <BiBookOpen className="h-[20px] w-[20px]" />
-          POKEDEX
+          <span className="hidden sm:inline">POKEDEX</span>
         </NavigationLink>
         <NavigationLink
           to="/memory-game"
-          className={`nav-item ${currentId === "game" ? "active" : ""}`}
+          className={`nav-item hidden sm:flex ${currentId === "game" ? "active" : ""}`}
           loadingOptions={{ minLoadingTime: 1200 }}
         >
           <IoGameControllerOutline className="h-[20px] w-[20px]" />
-          GAME
+          <span className="hidden sm:inline">GAME</span>
         </NavigationLink>
       </div>
       <div className="flex flex-row gap-2">

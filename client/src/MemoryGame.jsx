@@ -121,7 +121,7 @@ export default function MemoryGame() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="relative flex h-screen w-screen flex-col items-center justify-center overflow-hidden">
+    <div className="relative flex h-full w-screen flex-col items-center justify-center overflow-auto xl:h-screen xl:overflow-hidden">
       <AudioPlayer />
       <Navbar />
 
@@ -135,9 +135,9 @@ export default function MemoryGame() {
         <div className="bg-text-tertiary absolute inset-0 mix-blend-multiply"></div>
       </div>
 
-      <div className="relative z-10 mt-24 flex h-[670px] flex-col items-center">
+      <div className="relative z-10 mt-24 flex flex-col items-center xl:h-[670px]">
         {/* Game Header */}
-        <div className="w-[1240px] pl-8">
+        <div className="px -8 w-full xl:w-[1240px]">
           <div className="flex flex-row items-center justify-between gap-4">
             <div className="flex flex-row items-center justify-center gap-6">
               <div className="stat backdrop-blur-sm">Score: {score}</div>
@@ -146,7 +146,10 @@ export default function MemoryGame() {
                 Matches: {matchedCards.length}/{pokemonCards.length / 2}
               </div>
             </div>
-            <button onClick={resetGame} className="main-btn backdrop-blur-sm">
+            <button
+              onClick={resetGame}
+              className="main-btn rounded-[8px] px-5 py-2 text-sm backdrop-blur-sm sm:text-base md:text-lg"
+            >
               Reset Game
             </button>
           </div>
@@ -163,7 +166,10 @@ export default function MemoryGame() {
                 <p>
                   Score: {score} | Attempts: {attempts}
                 </p>
-                <button onClick={resetGame} className="main-btn">
+                <button
+                  onClick={resetGame}
+                  className="main-btn rounded-[8px] px-5 py-2 text-sm sm:text-base md:text-lg"
+                >
                   Play Again
                 </button>
                 <ConfettiSideCannons />
@@ -173,7 +179,7 @@ export default function MemoryGame() {
         </Dialog>
 
         {/* Game Board */}
-        <div className="relative z-10 -m-2 flex w-[1400px] flex-wrap justify-center">
+        <div className="relative z-10 -m-2 flex w-full flex-wrap justify-center xl:max-w-[1400px]">
           {pokemonCards.map((card) => (
             <div
               key={card.cardId}

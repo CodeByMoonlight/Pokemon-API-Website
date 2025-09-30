@@ -23,7 +23,7 @@ export default function Footer() {
           <img src="/assets/logo.png" alt="logo" className="w-24" />
         </Link>
       </div>
-      <div className="flex w-1/3 flex-row justify-center gap-5">
+      <div className="flex w-1/3 flex-row justify-center gap-0 sm:gap-5">
         <a
           href="https://www.facebook.com/Pokemon/"
           target="_blank"
@@ -66,7 +66,7 @@ export default function Footer() {
         </a>
       </div>
       <div className="w-1/3 text-right">
-        <p className="text-text-primary font-semibold">
+        <p className="text-text-primary text-[10px] font-semibold sm:text-base">
           © 2025 All Rights Reserved
         </p>
       </div>

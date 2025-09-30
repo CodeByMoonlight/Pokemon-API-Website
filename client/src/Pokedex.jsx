@@ -8,6 +8,8 @@ import AudioPlayer from "./components/AudioPlayer.jsx";
 import { Input } from "@/components/ui/input";
 import { CircleChevronRight } from "lucide-react";
 import { CircleChevronLeft } from "lucide-react";
+import { FaChevronLeft } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
 
 export default function Pokedex() {
   // State for Pokemon data
@@ -149,6 +151,16 @@ export default function Pokedex() {
             </button>
           </>
         )}
+
+        {/* Right Arrow */}
+        {currentPage < totalPages && (
+          <button
+            onClick={handleNextPage}
+            className="border-text-tertiary hover:bg-pokeball-blue h-10 w-10 rounded-md border-2 bg-white hover:text-white"
+          >
+            <FaChevronRight className="m-auto text-xs sm:text-sm xl:text-sm" />
+          </button>
+        )}
       </div>
     );
   };
@@ -236,17 +248,17 @@ export default function Pokedex() {
         </div>
 
         <div className="absolute flex h-fit flex-col items-center justify-center gap-4 p-6">
-          <h2 className="text-4xl font-bold text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)]">
+          <h2 className="text-3xl font-bold text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)] sm:text-4xl">
             Explore Pokémon stats, abilities, and evolutions
           </h2>
-          <p className="w-[600px] font-medium text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)]">
+          <p className="max-w-[600px] font-medium text-white [text-shadow:3px_3px_4px_rgba(0,0,0,0.6)]">
             Dive into the Pokémon universe with our complete Pokédex. Learn
             about each Pokémon’s stats, abilities, and evolution paths all in
             one place.
           </p>
           <Input
             placeholder="Search Pokémon by name..."
-            className="w-[600px] bg-white"
+            className="max-w-[600px] bg-white"
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
           />

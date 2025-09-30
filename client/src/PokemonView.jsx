@@ -178,13 +178,15 @@ export default function PokemonView() {
     const { foregroundColor, backgroundColor } = getStatColors(pokemonType);
 
     return (
-      <div className="flex items-center gap-4">
-        <div className="w-28 text-left text-sm font-medium capitalize">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <div className="w-20 text-left text-xs font-medium capitalize sm:w-24 sm:text-sm lg:w-28">
           {statName.replace("_", " ")}
         </div>
-        <div className="w-12 text-right text-sm font-semibold">{value}</div>
+        <div className="w-8 text-right text-xs font-semibold sm:w-10 sm:text-sm lg:w-12">
+          {value}
+        </div>
         <div
-          className={`flex-1 ${backgroundColor} relative h-6 overflow-hidden rounded-full`}
+          className={`flex-1 ${backgroundColor} relative h-4 overflow-hidden rounded-full sm:h-5 lg:h-6`}
         >
           <div
             className={`h-full rounded-full transition-all duration-500 ${foregroundColor}`}
@@ -203,9 +205,9 @@ export default function PokemonView() {
 
   return (
     <div
-      className={`flex flex-row gap-36 bg-gradient-to-r ${typeColors[primaryType]} relative h-screen w-screen items-center justify-center`}
+      className={`flex flex-col gap-4 bg-gradient-to-r sm:gap-8 md:gap-16 lg:flex-row lg:gap-24 xl:gap-36 ${typeColors[primaryType]} relative min-h-screen w-screen items-center justify-center p-4 xl:p-0`}
     >
-      <div className="pointer-events-none absolute right-0 top-0 z-0 h-full w-1/2 overflow-hidden">
+      <div className="pointer-events-none absolute right-0 top-0 z-0 hidden h-full w-1/2 overflow-hidden xl:block">
         <img
           src={`/assets/White Pokeball.svg`}
           alt={pokemon.en_name}
@@ -219,7 +221,7 @@ export default function PokemonView() {
       </div>
 
       {/*Pokemon Navigation*/}
-      <Link to={`/view/${pokemon.id - 1}`}>
+      <Link to={`/view/${pokemon.id - 1}`} className="hidden lg:block">
         <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110">
           <IoIosArrowBack className="h-8 w-8" />
         </div>
@@ -229,46 +231,45 @@ export default function PokemonView() {
       <div className="relative z-10">
         {/*Pokemon Header*/}
         <div className="flex flex-col gap-1">
-          <div className="flex flex-row items-center gap-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-1 transition-transform duration-300 hover:scale-110 hover:rounded-full hover:bg-[rgba(255,255,255,0.5)] hover:shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)]"
-            >
-              <FaArrowLeftLong />
-            </button>
-            <h3 className="text-left text-xl font-semibold">
+          <div className="flex flex-row items-center gap-2 sm:gap-4">
+            <Link to={`/pokedex/page/1`}>
+              <div className="p-1 transition-transform duration-300 hover:scale-110 hover:rounded-full hover:bg-[rgba(255,255,255,0.5)] hover:shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)]">
+                <FaArrowLeftLong className="text-sm sm:text-base" />
+              </div>
+            </Link>
+            <h3 className="text-left text-lg font-semibold sm:text-xl">
               #{pokemon.id.toString().padStart(5, "0")}
             </h3>
           </div>
-          <div className="flex flex-row items-center gap-5">
-            <h1 className="text-left text-4xl font-semibold capitalize">
+          <div className="flex flex-row items-center gap-3 sm:gap-5">
+            <h1 className="text-left text-2xl font-semibold capitalize sm:text-3xl lg:text-4xl">
               {pokemon.en_name}
             </h1>
             <img
               src={`/assets/${typeIcons[primaryType]}`}
               alt={pokemon.en_name}
-              className="w-10"
+              className="w-8 sm:w-10"
             />
           </div>
         </div>
 
         {/*Main Details*/}
-        <div className="mt-4 flex flex-row items-center justify-center gap-5">
+        <div className="mt-4 flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-5">
           {/*Pokemon Image*/}
-          <div className="relative flex h-fit w-[450px] flex-row">
+          <div className="relative flex h-fit w-full max-w-[300px] flex-row sm:max-w-[350px] lg:max-w-[450px]">
             <img
               src={`/assets/${typeIcons[primaryType]}`}
               alt={pokemon.en_name}
-              className="w-80 opacity-50"
+              className="w-48 opacity-50 sm:w-64 lg:w-80"
             />
             <h1
-              className={`absolute left-0 top-10 text-5xl font-semibold ${typeText[primaryType]}`}
+              className={`absolute left-0 top-6 text-2xl font-semibold sm:top-8 sm:text-3xl lg:top-10 lg:text-5xl ${typeText[primaryType]}`}
             >
               {pokemon.jp_name}
             </h1>
             {pokemon.sprite ? (
               <img
-                className="absolute -bottom-5 right-0 m-auto w-72"
+                className="absolute -bottom-3 right-0 m-auto w-48 sm:-bottom-4 sm:w-60 lg:-bottom-5 lg:w-72"
                 src={pokemon.sprite}
                 alt={pokemon.en_name}
               />
@@ -278,7 +279,7 @@ export default function PokemonView() {
           </div>
 
           {/*Pokemon Details*/}
-          <div className="flex h-[650px] w-[36rem] flex-col px-5">
+          <div className="flex h-auto w-screen flex-col px-2 sm:px-5 lg:h-[650px] lg:w-[750px]">
             <Tabs defaultValue="about" className="">
               <TabsList className="">
                 <TabsTrigger
@@ -298,28 +299,40 @@ export default function PokemonView() {
                 <div className="flex flex-col gap-5">
                   {/*Story*/}
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-left text-lg font-bold">Story</h2>
-                    <p className="text-left">{pokemon.story}</p>
+                    <h2 className="text-left text-base font-bold sm:text-lg">
+                      Story
+                    </h2>
+                    <p className="text-left text-sm sm:text-base">
+                      {pokemon.story}
+                    </p>
                   </div>
 
                   {/*Details*/}
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-left text-lg font-bold">Details</h2>
+                    <h2 className="text-left text-base font-bold sm:text-lg">
+                      Details
+                    </h2>
                     <div className="flex flex-wrap gap-5">
                       {Object.entries(pokemon.details || {}).map(
                         ([key, value], index) => {
                           if (Array.isArray(value)) {
                             return (
-                              <div key={index} className="flex flex-row gap-5">
+                              <div
+                                key={index}
+                                className="flex flex-row gap-3 sm:gap-5"
+                              >
                                 {(value || []).map((item, idx) => (
                                   <div
                                     key={idx}
-                                    className="flex w-40 flex-col gap-2 rounded-lg bg-white p-2 py-3 shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-105"
+                                    className="flex w-32 flex-col gap-2 rounded-lg bg-white p-2 py-3 shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-105 sm:w-36 lg:w-40"
                                   >
-                                    <p className="text-base font-semibold capitalize">
+                                    <p className="text-sm font-semibold capitalize sm:text-base">
                                       {key}
                                     </p>
-                                    <p className="text-sm capitalize" key={idx}>
+                                    <p
+                                      className="text-xs capitalize sm:text-sm"
+                                      key={idx}
+                                    >
                                       {item}
                                     </p>
                                   </div>
@@ -330,12 +343,12 @@ export default function PokemonView() {
                             return (
                               <div
                                 key={index}
-                                className="flex w-40 flex-col gap-2 rounded-lg bg-white p-2 py-3 shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110"
+                                className="flex w-32 flex-col gap-2 rounded-lg bg-white p-2 py-3 shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110 sm:w-36 lg:w-40"
                               >
-                                <p className="text-base font-semibold capitalize">
+                                <p className="text-sm font-semibold capitalize sm:text-base">
                                   {key}
                                 </p>
-                                <div className="flex flex-row justify-center gap-4 text-sm">
+                                <div className="flex flex-row justify-center gap-4 text-xs sm:text-sm">
                                   {key === "gender"
                                     ? getGenderDisplay(value)
                                     : value}
@@ -350,8 +363,10 @@ export default function PokemonView() {
 
                   {/*Evolution*/}
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-left text-lg font-bold">Evolution</h2>
-                    <div className="flex flex-wrap gap-5">
+                    <h2 className="text-left text-base font-bold sm:text-lg">
+                      Evolution
+                    </h2>
+                    <div className="flex flex-wrap gap-3 sm:gap-5">
                       {(pokemon.evolutionChain || []).map((evo, index) => (
                         <Link to={`/view/${evo.id}`} key={index}>
                           <div
@@ -361,7 +376,7 @@ export default function PokemonView() {
                             <img
                               src={evo.sprite}
                               alt={evo.name}
-                              className="w-16"
+                              className="w-12 sm:w-14 lg:w-16"
                             />
                           </div>
                         </Link>
@@ -374,8 +389,10 @@ export default function PokemonView() {
                 <div className="flex flex-col gap-5">
                   {/*Base Stats*/}
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-left text-lg font-bold">Base Stats</h2>
-                    <div className="flex flex-col gap-2 rounded-md bg-white p-4 pl-4 shadow-[5px_5px_5px_0px_rgba(0,0,0,0.08)]">
+                    <h2 className="text-left text-base font-bold sm:text-lg">
+                      Base Stats
+                    </h2>
+                    <div className="flex flex-col gap-2 rounded-md bg-white p-3 pl-3 shadow-[5px_5px_5px_0px_rgba(0,0,0,0.08)] sm:p-4 sm:pl-4">
                       {Object.entries(pokemon.baseStat || {}).map(
                         ([key, value], index) => (
                           <div key={index}>
@@ -388,20 +405,22 @@ export default function PokemonView() {
 
                   {/*Weakness*/}
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-left text-lg font-bold">Weakness</h2>
-                    <div className="flex flex-wrap gap-3">
+                    <h2 className="text-left text-base font-bold sm:text-lg">
+                      Weakness
+                    </h2>
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                       {(pokemon.weaknesses || []).map((weakness, index) => (
                         <div
                           key={index}
-                          className="flex w-12 flex-col items-center gap-1"
+                          className="flex w-10 flex-col items-center gap-1 sm:w-12"
                         >
                           <Tooltip>
                             <TooltipTrigger>
-                              <div className="rounded-full bg-white p-[6px] shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110">
+                              <div className="rounded-full bg-white p-[4px] shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110 sm:p-[6px]">
                                 <img
                                   src={`/assets/${typeIcons[weakness.name]}`}
                                   alt={pokemon.en_name}
-                                  className={`w-10 ${typeBg[weakness.name]} rounded-full`}
+                                  className={`w-8 sm:w-10 ${typeBg[weakness.name]} rounded-full`}
                                 />
                               </div>
                             </TooltipTrigger>
@@ -416,20 +435,22 @@ export default function PokemonView() {
 
                   {/*Resistance*/}
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-left text-lg font-bold">Resistance</h2>
-                    <div className="flex flex-wrap gap-3">
+                    <h2 className="text-left text-base font-bold sm:text-lg">
+                      Resistance
+                    </h2>
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                       {(pokemon.resistances || []).map((resistance, index) => (
                         <div
                           key={index}
-                          className="flex w-12 flex-col items-center gap-1"
+                          className="flex w-10 flex-col items-center gap-1 sm:w-12"
                         >
                           <Tooltip>
                             <TooltipTrigger>
-                              <div className="rounded-full bg-white p-[6px] shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110">
+                              <div className="rounded-full bg-white p-[4px] shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110 sm:p-[6px]">
                                 <img
                                   src={`/assets/${typeIcons[resistance.name]}`}
                                   alt={pokemon.en_name}
-                                  className={`w-10 ${typeBg[resistance.name]} rounded-full`}
+                                  className={`w-8 sm:w-10 ${typeBg[resistance.name]} rounded-full`}
                                 />
                               </div>
                             </TooltipTrigger>
@@ -449,7 +470,7 @@ export default function PokemonView() {
       </div>
 
       {/*Pokemon Navigation*/}
-      <Link to={`/view/${pokemon.id + 1}`}>
+      <Link to={`/view/${pokemon.id + 1}`} className="hidden lg:block">
         <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110">
           <IoIosArrowForward className="h-8 w-8" />
         </div>
