@@ -1,5 +1,19 @@
 # Pokemon Website
 
+![Welcome Banner](client\public\assets\read_me.gif)
+
+## Table of Contents
+
+- [Description](#description)
+- [Frameworks and Technologies](#frameworks-and-technologies)
+- [Routes](#routes)
+- [Features](#features)
+- [How to Run](#how-to-run)
+- [Acknowledgments](#acknowledgments)
+- [Academic Context](#academic-context)
+- [Contributors](#contributors)
+- [License](#license)
+
 ## Description
 
 This Pokemon Website is a full-stack application that allows users to explore Pokemon details, manage custom stories for each Pokemon, and interact with the PokeAPI. The application provides a seamless user experience with a modern interface and robust backend functionality.
@@ -29,9 +43,17 @@ This Pokemon Website is a full-stack application that allows users to explore Po
 ### Frontend Routes
 
 - **/**
-  - The homepage displaying a list of Pokemon.
-- **/pokemon/:id**
-  - A detailed view of a specific Pokemon, including its story and other details.
+  - The homepage displaying a list of Pokemon. Users can browse through the list and select a Pokemon to view its details.
+- **/view/:pokemonId**
+  - Displays detailed information about a specific Pokemon, including its stats, abilities, and custom story (if available).
+- **/view/:pokemonId/update**
+  - Allows users to update or edit the custom story for the selected Pokemon.
+- **/memory-game**
+  - A fun memory game featuring Pokemon cards. Users can test their memory skills by matching pairs of Pokemon.
+- **/pokedex**
+  - Redirects to the first page of the Pokedex.
+- **/pokedex/page/:pageNumber**
+  - Displays a paginated view of the Pokedex, allowing users to navigate through pages to explore all Pokemon.
 
 ## Features
 
@@ -62,7 +84,7 @@ This Pokemon Website is a full-stack application that allows users to explore Po
      ```
    - For the server:
      ```bash
-     npm start
+     npm run dev
      ```
 5. Open the application in your browser at `http://localhost:5173/`.
 
