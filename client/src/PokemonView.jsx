@@ -1,6 +1,6 @@
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { IoIosArrowBack } from "react-icons/io";
@@ -28,12 +28,16 @@ import { AiFillStar } from "react-icons/ai";
 
 export default function PokemonView() {
   const { pokemonId } = useParams();
+  const location = useLocation();
   const [pokemon, setPokemon] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditingStory, setIsEditingStory] = useState(false);
   const [editedStory, setEditedStory] = useState("");
   const [saving, setSaving] = useState(false);
+
+  // Check if we're in update mode based on URL
+  const isUpdateMode = location.pathname.includes("/update");
 
   async function getEvolutionChainWithIds(chain) {
     const evolutions = [];
@@ -374,19 +378,21 @@ export default function PokemonView() {
                         )}
                       </h2>
                       {!isEditingStory ? (
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <p
-                              onClick={handleEditStory}
-                              className="hover:bg-pokeball-dark text-text-primary hover:bg-pokeball-blue cursor-pointer rounded-full bg-white p-2 transition-colors duration-200 hover:scale-105 hover:text-white hover:shadow-blue-950"
-                            >
-                              <BiSolidEdit className="" />
-                            </p>
-                          </TooltipTrigger>
-                          <TooltipContent className="capitalize">
-                            <p>Edit</p>
-                          </TooltipContent>
-                        </Tooltip>
+                        isUpdateMode && (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <p
+                                onClick={handleEditStory}
+                                className="hover:bg-pokeball-dark text-text-primary hover:bg-pokeball-blue cursor-pointer rounded-full bg-white p-2 transition-colors duration-200 hover:scale-105 hover:text-white hover:shadow-blue-950"
+                              >
+                                <BiSolidEdit className="" />
+                              </p>
+                            </TooltipTrigger>
+                            <TooltipContent className="capitalize">
+                              <p>Edit</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )
                       ) : (
                         <div className="flex gap-2">
                           <button

@@ -45,6 +45,14 @@ const route = createBrowserRouter([
     ),
   },
   {
+    path: "/view/:pokemonId/update",
+    element: (
+      <AppWithProgressBar>
+        <PokemonView />
+      </AppWithProgressBar>
+    ),
+  },
+  {
     path: "/memory-game",
     element: (
       <AppWithProgressBar>
