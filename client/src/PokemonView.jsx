@@ -23,12 +23,17 @@ import {
   getStatColors,
   getPrimaryType,
 } from "./utils/pokemonTypes";
+import { BiSolidEdit } from "react-icons/bi";
+import { AiFillStar } from "react-icons/ai";
 
 export default function PokemonView() {
   const { pokemonId } = useParams();
   const [pokemon, setPokemon] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditingStory, setIsEditingStory] = useState(false);
+  const [editedStory, setEditedStory] = useState("");
+  const [saving, setSaving] = useState(false);
 
   async function getEvolutionChainWithIds(chain) {
     const evolutions = [];
@@ -65,6 +70,25 @@ export default function PokemonView() {
           .data;
 
         const evolutions = await getEvolutionChainWithIds(evolutionData.chain);
+
+        // Check for custom story in database first
+        let customStory = null;
+        try {
+          const storyResponse = await axios.get(
+            `http://localhost:8080/pokemon/${pokemonId}/story`,
+          );
+          customStory = storyResponse.data.story;
+        } catch (storyError) {
+          console.log("No custom story found, using API story");
+        }
+
+        // Use custom story if available, otherwise use API story
+        const finalStory =
+          customStory ||
+          speciesData.flavor_text_entries
+            .find((entry) => entry.language.name === "en")
+            ?.flavor_text.replace(/\f/g, " ") ||
+          "No description available";
 
         setPokemon({
           id: details.id,
@@ -109,12 +133,11 @@ export default function PokemonView() {
                 .flat(),
             ),
           ).map((name) => ({ name })),
-          story:
-            speciesData.flavor_text_entries
-              .find((entry) => entry.language.name === "en")
-              ?.flavor_text.replace(/\f/g, " ") || "No description available",
+          story: finalStory,
           evolutionChain: evolutions,
+          hasCustomStory: !!customStory,
         });
+        setEditedStory(finalStory);
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch Pokemon details");
@@ -127,6 +150,44 @@ export default function PokemonView() {
       fetchPokemonData();
     }
   }, [pokemonId]);
+
+  // Inline editing functions
+  const handleEditStory = () => {
+    setIsEditingStory(true);
+    setEditedStory(pokemon.story);
+  };
+
+  const handleSaveStory = async () => {
+    if (!editedStory.trim()) {
+      alert("Story cannot be empty");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await axios.put(`http://localhost:8080/pokemon/${pokemonId}/story`, {
+        story: editedStory.trim(),
+      });
+
+      // Update local state
+      setPokemon((prev) => ({
+        ...prev,
+        story: editedStory.trim(),
+        hasCustomStory: true,
+      }));
+      setIsEditingStory(false);
+    } catch (err) {
+      console.error("Failed to save story:", err);
+      alert("Failed to save story. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingStory(false);
+    setEditedStory(pokemon.story);
+  };
 
   // Function to set pokemon gender value equivalent
   const getGenderDisplay = (genderRate) => {
@@ -278,7 +339,7 @@ export default function PokemonView() {
           </div>
 
           {/*Pokemon Details*/}
-          <div className="flex h-auto w-screen flex-col px-2 sm:px-5 lg:h-[40rem] lg:w-[46rem]">
+          <div className="flex h-auto w-screen flex-col overflow-hidden px-2 sm:px-5 lg:h-[40rem] lg:w-[46rem]">
             <Tabs defaultValue="about" className="">
               <TabsList className="">
                 <TabsTrigger
@@ -298,12 +359,77 @@ export default function PokemonView() {
                 <div className="flex flex-col gap-5">
                   {/*Story*/}
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-left text-base font-bold sm:text-lg">
-                      Story
-                    </h2>
-                    <p className="text-left text-sm sm:text-base">
-                      {pokemon.story}
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <h2 className="flex flex-row items-center justify-center gap-4 text-left text-base font-bold sm:text-lg">
+                        Story
+                        {pokemon.hasCustomStory && (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <AiFillStar className="text-ground-dark hover:bg-ground-dark h-6 w-6 rounded-full bg-white p-1 shadow-md hover:scale-105 hover:text-white" />
+                            </TooltipTrigger>
+                            <TooltipContent className="capitalize">
+                              <p>Customize</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                      </h2>
+                      {!isEditingStory ? (
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <p
+                              onClick={handleEditStory}
+                              className="hover:bg-pokeball-dark text-text-primary hover:bg-pokeball-blue cursor-pointer rounded-full bg-white p-2 transition-colors duration-200 hover:scale-105 hover:text-white hover:shadow-blue-950"
+                            >
+                              <BiSolidEdit className="" />
+                            </p>
+                          </TooltipTrigger>
+                          <TooltipContent className="capitalize">
+                            <p>Edit</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={handleSaveStory}
+                            disabled={
+                              saving || editedStory.trim() === pokemon.story
+                            }
+                            className="rounded-md bg-green-700 px-3 py-1 text-sm text-white transition-colors duration-200 hover:bg-green-800 disabled:cursor-not-allowed disabled:bg-gray-400"
+                          >
+                            {saving ? "Saving..." : "Save"}
+                          </button>
+                          <button
+                            onClick={handleCancelEdit}
+                            disabled={saving}
+                            className="rounded-md bg-gray-500 px-3 py-1 text-sm text-white transition-colors duration-200 hover:bg-gray-600 disabled:cursor-not-allowed disabled:bg-gray-400"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    {!isEditingStory ? (
+                      <p className="text-left text-sm sm:text-base">
+                        {pokemon.story}
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        <textarea
+                          value={editedStory}
+                          onChange={(e) => setEditedStory(e.target.value)}
+                          className="h-32 w-full resize-none rounded-lg border border-gray-300 p-3 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-base"
+                          placeholder="Enter the Pokemon's story here..."
+                        />
+                        <div className="flex justify-between text-xs text-gray-600">
+                          <span>Characters: {editedStory.length}</span>
+                          {editedStory.trim() !== pokemon.story && (
+                            <span className="text-orange-600">
+                              Unsaved changes
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/*Details*/}
