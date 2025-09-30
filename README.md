@@ -1,7 +1,5 @@
 # Pokemon Website
 
-![Welcome Banner](./client/public/assets/read_me.gif)
-
 ## Table of Contents
 
 - [Description](#description)
