@@ -326,11 +326,19 @@ export default function PokemonView() {
       </div>
 
       {/*Pokemon Navigation*/}
-      <Link to={`/view/${pokemon.id - 1}`} className="hidden lg:block">
-        <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110">
-          <IoIosArrowBack className="h-8 w-8" />
-        </div>
-      </Link>
+      <div className="hidden lg:block">
+        {pokemon.id > 1 ? (
+          <Link to={`/view/${pokemon.id - 1}`}>
+            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110">
+              <IoIosArrowBack className="h-8 w-8" />
+            </div>
+          </Link>
+        ) : (
+          <div className="relative z-10 flex h-12 w-12 cursor-not-allowed items-center justify-center rounded-full bg-gray-300 opacity-50">
+            <IoIosArrowBack className="h-8 w-8 text-gray-500" />
+          </div>
+        )}
+      </div>
 
       {/*Pokemon Info*/}
       <div className="relative z-10">
@@ -656,11 +664,19 @@ export default function PokemonView() {
       </div>
 
       {/*Pokemon Navigation*/}
-      <Link to={`/view/${pokemon.id + 1}`} className="hidden lg:block">
-        <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110">
-          <IoIosArrowForward className="h-8 w-8" />
-        </div>
-      </Link>
+      <div className="hidden lg:block">
+        {pokemon.id < 10276 ? (
+          <Link to={`/view/${pokemon.id + 1}`}>
+            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[5px_5px_5px_0px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-110">
+              <IoIosArrowForward className="h-8 w-8" />
+            </div>
+          </Link>
+        ) : (
+          <div className="relative z-10 flex h-12 w-12 cursor-not-allowed items-center justify-center rounded-full bg-gray-300 opacity-50">
+            <IoIosArrowForward className="h-8 w-8 text-gray-500" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

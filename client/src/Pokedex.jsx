@@ -270,7 +270,7 @@ export default function Pokedex() {
           </p>
           <Input
             placeholder="Search Pokémon by name..."
-            className="max-w-[36rem] bg-white"
+            className="text-text-primary max-w-[36rem] border border-gray-300 bg-white px-4 py-2 placeholder:text-gray-500"
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
           />
